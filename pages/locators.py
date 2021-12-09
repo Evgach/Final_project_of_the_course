@@ -19,3 +19,5 @@ class ProductPageLocators():
     PRICE_IN_MESSAGE = (By.CSS_SELECTOR, "#messages>div:nth-child(3) strong")
     
     PRICE_ON_PAGE = (By.CSS_SELECTOR, ".col-sm-6.product_main>.price_color")
+    
+    SUCCESS_MESSAGE = (By.CSS_SELECTOR, "#messages>div:nth-child(1)")

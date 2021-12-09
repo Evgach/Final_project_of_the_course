@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from .locators import ProductPageLocators
 
 class PageObject(BasePage):
-    def book_add_to_bucket(self):
+    def book_add_to_basket(self):
         button = self.browser.find_element(*ProductPageLocators.ADD_TO_BASKET_BUTTON)
         button.click()
         
@@ -16,3 +16,11 @@ class PageObject(BasePage):
         price_in_mes = self.browser.find_element(*ProductPageLocators.PRICE_IN_MESSAGE).text
         price_on_pag = self.browser.find_element(*ProductPageLocators.PRICE_ON_PAGE).text
         assert price_in_mes == price_on_pag, "The cost of the basket DOES NOT match the price of the item"
+        
+    def should_not_be_success_message(self):
+        assert self.is_not_element_present(*ProductPageLocators.SUCCESS_MESSAGE), \
+        "Success message is presented, but should not be"
+        
+    def should_not_be_success_message_is_disappeared(self):
+        assert self.is_disappeared(*ProductPageLocators.SUCCESS_MESSAGE), \
+        "Success message is presented, but should not be"
