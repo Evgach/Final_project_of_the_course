@@ -1,6 +1,7 @@
 from .pages.product_page import PageObject
 from .pages.base_page import BasePage
 from .pages.main_page import MainPage
+from .pages.login_page import LoginPage
 from .pages.basket_page import BasketPage
 import time
 import pytest
@@ -72,4 +73,31 @@ def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
     page2 = BasketPage(browser, browser.current_url)
     page2.there_are_no_products_in_basket()
     page2.there_is_text_about_basket_is_empty()
+
+@pytest.mark.login_guest_for_registred_users    
+class TestUserAddToBasketFromProductPage():
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/en-gb/accounts/login/"
+        self.login_page = LoginPage(browser, link)
+        self.base_page = BasePage(browser, link)
+        self.login_page.open()
+        email = str(time.time()) + "@fakemail.org"
+        password = "testpassword123"
+        self.login_page.register_new_user(email, password)
+        self.base_page.should_be_authorized_user()
+        
+    def test_user_cant_see_success_message(self, browser): 
+        link = "http://selenium1py.pythonanywhere.com/catalogue/the-shellcoders-handbook_209"
+        self.page = PageObject(browser, link)
+        self.page.open()
+        self.page.should_not_be_success_message()
     
+    def test_user_can_add_product_to_basket(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/the-shellcoders-handbook_209"
+        self.page = PageObject(browser, link)
+        self.page.open()
+        self.page.book_add_to_basket()
+        #self.page.solve_quiz_and_get_code()
+        self.page.message_about_item_added_to_basket()
+        self.page.message_about_price_of_the_basket()
